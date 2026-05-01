@@ -1,8 +1,8 @@
 import pygame
 
-from bullet import Bullet
-from helpers import load_frames, flip_frames, handle_portal_collision, advance_frame, apply_motion
-from settings import vector
+import Bullet
+import load_frames, flip_frames, handle_portal_collision, advance_frame, apply_motion
+import vector
 
 RUN_FRAMES = [f"Run ({i}).png" for i in range(1, 11)]
 IDLE_FRAMES = [f"Idle ({i}).png" for i in range(1, 11)]
@@ -18,44 +18,35 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         #Set constant variables
-        # TODO: assign 2 to self.HORIZONTAL_ACCELERATION
-        # TODO: assign 0.15 to self.HORIZONTAL_FRICTION
-        # Gravity
-        # TODO: assign 0.8 to self.VERTICAL_ACCELERATION
+        self.HORIZONTAL_ACCELERATION = 2
+        self.HORIZONTAL_FRICTION = 0.15
+        self.VERTICAL_ACCELERATION = 0.8
+        gravity = vector(0, -9.8)
         # Determines how high the player can jump
-        # TODO: assign 18 to self.VERTICAL_JUMP_SPEED
-        # TODO: assign 100 to self.STARTING_HEALTH
+        self.VERTICAL_JUMP_SPEED = 18
+        self.STARTING_HEALTH = 100
+
 
         #Animation frames
-        # TODO: assign load_frames() to self.move_right_sprites with these 3 arguments
-        #  1: "images/player/run"
-        #  2: RUN_FRAMES
-        #  3: (64, 64))
-
-        # TODO: assign flip_frames to self.move_left_sprites with this 1 argument
-        #  1: self.move_right_sprites
-
-        # TODO: assign load_frames() to self.idle_right_sprites with these 3 arguments
-        #  1: "images/player/idle"
-        #  2: IDLE_FRAMES
-        #  3: (64, 64))
-
-        # TODO: assign flip_frames() to self.idle_left_sprites with this 1 argument
-        #  1: self.idle_right_sprites
-
+        self.move_right_sprites = ("images/player/run", RUN_FRAMES, (64, 64))
+        self.move_left_sprites = flip_frames("self.move_right_sprites")
+        self.idle_right_sprites = load_frames("images/player/idle", IDLE_FRAMES, (64, 64) )
+        self.idle_left_sprites = flip_frames("self.idle_right_sprites")
         # TODO: assign load_frames() to self.jump_right_sprites with these 3 arguments
         #  1: "images/player/jump"
         #  2: JUMP_FRAMES
         #  3: (64, 64))
+        self.jump_right_sprites = load_frames("images/player/jump", JUMP_FRAMES,(64, 64))
 
         # TODO: assign flip_frames() to self.jump_left_sprites() with this 1 arguments
         #  1: self.jump_right_sprites
+        self.jump_left_sprites() == flip_frames("self.jump_right_sprites")
 
         # TODO: assign load_frames() to self.attack_right_sprites with these 3 arguments
         #  1: "images/player/attack"
         #  2: ATTACK_FRAMES
         #  3: (64, 64))
-
+        self.attack_right_sprites = load_frames("images/player/attack",ATTACK_FRAMES,(64, 64))
         # TODO: assign flip_frames() to self.attack_left_sprites with this 1 argument
         #  1: self.attack_right_sprites
 
@@ -216,37 +207,19 @@ class Player(pygame.sprite.Sprite):
 
     def fire(self):
         """Fire a 'bullet' from a sword"""
-        # TODO: call self.slash_sound.play()
-        # TODO: call Bullet() with these 5 arguments
-        #  1: self.rect.centerx
-        #  2:
-        #  3: self.rect.centery
-        #  4: self.bullet_group
-        #  5: self)
-        # TODO: assign True to self.animate_fire
-
+        self.slash_sound.play()
+        Bullet(self.rect.centerx,self.rect.centery,self.bullet_group,self.bullet_group,self)
+        self.animate_fire = True
     def reset(self):
         """Reset the player's position"""
-        # TODO: assign vector() to self.velocity with these 2 arguments
-        #  1: 0
-        #  2: 0
-
-        # TODO: assign vector() to self.position with these 2 arguments
-        #  1: self.starting_x
-        #  2: self.starting_y
-
-        # TODO: assign self.position to self.rect.bottomleft
-
-
+        self.velocity = vector(0, 0)
+        self.position = vector( self.starting_x, self.starting_y)
+        self.rect.bottomleft = self.position
     def animate(self, sprite_list, speed):
         """Animate the player's actions"""
-        # TODO: assign advance_frame() to (self.current_sprite, wrapped) with these 3 arguments
-        #  1: self.current_sprite
-        #  2: sprite_list
-        #  3: speed)
-        # TODO: if wrapped:
-            # TODO: if self.animate_jump:
-                # TODO: assign False to self.animate_jump
-            # TODO: if self.animate_fire:
-                # TODO: assign False to self.animate_fire
-        # TODO: assign sprite_list[int(self.current_sprite)] to self.image
+        (self.current_sprite, wrapped) = advance_frame(self.current_sprite, sprite_list, speed)
+        if wrapped:
+            self.animate_jump = False
+            if self.animate_fire:
+                self.animate_fire = False
+                self.image = sprite_list[int(self.current_sprite)]

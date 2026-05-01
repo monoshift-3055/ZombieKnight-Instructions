@@ -12,32 +12,44 @@ class RubyMaker(pygame.sprite.Sprite):
 
         #Animation frames
         # TODO: assign load_frames() to self.ruby_sprites with 3 arguments
+        self.ruby_sprites = load_frames("image/ruby",RUBY_FRAMES,(64, 64))
         #  1: "image/ruby"
         #  2: RUBY_FRAMES
         #  3: (64, 64)
 
         #Load image and get rect
         # TODO: assign 0 to self.current_sprite
+        self.current_sprite = 0
         # TODO: assign self.ruby_sprites[self.current_sprite] to self.image
+        self.image = self.ruby_sprites[self.current_sprite]
         # TODO: assign self.image.get_rect() to self.rect
+        self.rect = self.image.get_rect()
         # TODO: assign (x, y) to self.rect.bottomleft
+        self.rect.bottomleft = (x, y)
 
         #Add to the main group for drawing purposes
         # TODO: call main_group.add() with this 1 argument
+        main_group.add(self)
         #  1: self
 
 
     def update(self):
         """Update the ruby maker"""
         # TODO: call self.animate with 2 arguments
+        self.animate(self.ruby_sprites,0.25)
         #  1: self.ruby_sprites
         #  2: 0.25
 
     def animate(self, sprite_list, speed):
         """Animate the ruby maker"""
         # TODO: if self.current_sprite < len(sprite_list) -1:
+        if self.current_sprite < len(sprite_list) - 1:
             # TODO: add speed to self.current_sprite
+            self.current_sprite += speed
         # TODO: else:
+        else:
             # TODO: assign 0 to self.current_sprite
+            self.current_sprite = 0
 
         # TODO: assign sprite_list[int(self.current_sprite)] to self.image
+        self.image = sprite_list[int(self.current_sprite)]

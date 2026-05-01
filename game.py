@@ -1,8 +1,7 @@
 import pygame
-
-from settings import FPS, WINDOW_HEIGHT, WINDOW_WIDTH, display_surface
-from zombie import Zombie
-from ruby import Ruby
+import FPS, WINDOW_HEIGHT, WINDOW_WIDTH, display_surface
+import Zombie
+import Ruby
 
 # Colors
 WHITE = (255, 255, 255)
@@ -16,52 +15,78 @@ class Game:
         """Initialize the game"""
         #Set constant variables
         # TODO: assign 30 to self.STARTING_ROUND_TIME
+        self.STARTING_ROUND_TIME = 30
         # TODO: assign 5 to self.STARTING_ZOMBIE_CREATION_TIME
+        self.STARTING_ZOMBIE_CREATION_TIME = 5
 
         #Set game values
         # TODO: assign 0 to self.score
+        self.score = 0
         # TODO: assign 1 to self.round_number
+        self.round_number = 1
         # TODO: assign 0 to self.frame_count
+        self.frame_count = 0
         # TODO: assign self.STARTING_ROUND_TIME to self.round_time
+        self.round_time = self.STARTING_ROUND_TIME
         # TODO: assign self.STARTING_ZOMBIE_CREATION_TIME to self.zombie_creation_time
+        self.zombie_creation_time = self.STARTING_ZOMBIE_CREATION_TIME
 
         #Set fonts
         # TODO: assign pygame.font.Font() to self.title_font with these 2 arguments
+        self.title_font = pygame.font.Font("fonts/Poultrygeist.ttf",48)
         #  1: "fonts/Poultrygeist.ttf"
         #  2: 48
         # TODO: assign pygame.font.Font() to self.HUD_font with these 2 arguments
+        self.HUD_font = pygame.font.Font("fonts/Pixel.ttf",24)
         #  1: "fonts/Pixel.ttf"
         #  2: 24
 
         #Set sounds
         # TODO: assign pygame.mixer.Sound() to self.lost_ruby_sound with this 1 argument
-        #  1: "sounds/lost_ruby.wav"
+        self.lost_ruby_sound = pygame.mixer.Sound(pygame.mixer.Sound())
+        #  1: pygame.mixer.Sound()
         # TODO: assign pygame.mixer.Sound() to self.ruby_pickup_sound with this 1 argument
+        self.ruby_pickup_sound = pygame.mixer.Sound("sounds/ruby_pickup.wav")
         #  1: "sounds/ruby_pickup.wav"
         # TODO: call pygame.mixer.music.load() with this 1 argument
+        pygame.mixer.music.load("sounds/level_music.wav")
         #  1: "sounds/level_music.wav"
 
         #Attach groups and sprites
         # TODO: assign player to self.player
+        self.player = player
         # TODO: assign zombie_group to self.zombie_group
+        self.zombie_group = zombie_group
         # TODO: assign platform_group to self.platform_group
+        self.platform_group = platform_group
         # TODO: assign portal_group to self.portal_group
+        self.portal_group = portal_group
         # TODO: assign bullet_group to self.bullet_group
+        self.bullet_group = bullet_group
         # TODO: assign ruby_group to self.ruby_group
+        self.ruby_group = ruby_group
 
 
     def update(self):
         """Update the game"""
         #Update the round time every second
         # TODO: add 1 to self.frame_count
+        self.frame_count += 1
         # TODO: if self.frame_count % FPS == 0:
+        if self.frame_count % FPS == 0:
             # TODO: subtract 1 from self.round_time
+            self.round_time -= 1
             # TODO: assign 0 to self.frame_count
+            self.frame_count = 0
 
         # TODO: call self.check_collisions()
+        self.check_collisions()
         # TODO: call self.add_zombie()
+        self.add_zombie()
         # TODO: call self.check_round_completion()
+        self.check_round_completion()
         # TODO: call self.check_game_over()
+        self.check_game_over()
 
 
     def draw(self):
@@ -69,20 +94,27 @@ class Game:
 
         #Set text
         # TODO: assign self.HUD_font.render() to score_text with these 3 arguments
+        score_text = self.HUD_font.render("Score: " + str(self.score),True,WHITE)
         #  1: "Score: " + str(self.score)
         #  2: True
         #  3: WHITE
         # TODO: assign score_text.get_rect() to score_rect
+        score_rect = score_text.get_rect()
         # TODO: assign (10, WINDOW_HEIGHT - 50) to score_rect.topleft
+        score_rect.topleft = (10, WINDOW_HEIGHT - 50)
 
         # TODO: assign self.HUD_font.render() to health_text with these 3 arguments
+        health_text = self.HUD_font.render("Health: " + str(self.player.health),True,WHITE)
         #  1: "Health: " + str(self.player.health)
         #  2: True
         #  3: WHITE
         # TODO: assign health_text.get_rect() to health_rect
+        health_rect = health_text.get_rect()
         # TODO: assign (10, WINDOW_HEIGHT - 25) to health_rect.topleft
+        health_rect.topleft = (10, WINDOW_HEIGHT - 50)
 
         # TODO: assign self.title_font.render() to title_text with these 3 arguments
+        title_text = self.title_font.render("Zombie Knight",True,GREEN)
         #  1: "Zombie Knight"
         #  2: True
         #  3: GREEN
@@ -287,21 +319,14 @@ class Game:
 
     def reset_game(self):
         """Reset the game"""
-        #Reset game values
-        # TODO: assign 0 to self.score
-        # TODO: assign 1 to self.round_number
-        # TODO: assign self.STARTING_ROUND_TIME to self.round_time
-        # TODO: assign self.STARTING_ZOMBIE_CREATION_TIME to self.zombie_creation_time
 
-        #Reset the player
-        # TODO: assign self.player.STARTING_HEALTH to self.player.health
-        # TODO: call self.player.reset()
-
-        #Empty sprite groups
-        # TODO: call self.zombie_group.empty()
-        # TODO: call self.ruby_group.empty()
-        # TODO: call self.bullet_group.empty()
-
-        # TODO: call pygame.mixer.music.play() with these 2 arguments
-        #  1: -1
-        #  2: 0.0
+        self.score = 0
+        self.round_number = 1
+        self.round_time = self.STARTING_ROUND_TIME
+        self.zombie_creation_time = self.STARTING_ZOMBIE_CREATION_TIME
+        self.player.health = self.player.STARTING_HEALTH
+        self.player.reset()
+        self.zombie_group.empty()
+        self.ruby_group.empty()
+        self.bullet_group.empty()
+        pygame.mixer.music.play(-1 ,0.0)

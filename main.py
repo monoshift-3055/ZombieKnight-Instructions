@@ -1,9 +1,9 @@
 import pygame
 
 from game import Game
-# from player import Player
-# from portal import Portal
-# from ruby_maker import RubyMaker
+from player import Player
+from portal import Portal
+from ruby_maker import RubyMaker
 from settings import FPS, display_surface, clock
 from tile import Tile
 
@@ -63,13 +63,15 @@ for row in range(len(tile_map)):
         elif 2 <= cell <= 5:
             Tile(x, y, cell, my_main_tile_group, my_platform_group)
         elif cell == 6:
-            pass
+            RubyMaker(x, y, my_main_tile_group)
         elif cell == 7:
-            pass
+            Portal(x, y, "green", my_portal_group)
         elif cell == 8:
-            pass
+            Portal(x, y, "purple", my_portal_group)
         elif cell == 9:
-            pass
+            my_player = Player(x - 32, y + 32, my_platform_group, my_portal_group, my_bullet_group)
+            # noinspection PyTypeChecker
+            my_player_group.add(my_bullet_group)
 
 #Load in a background image (we must resize)
 background_image = pygame.transform.scale(pygame.image.load("images/background.png"), (1280, 736))
@@ -79,7 +81,7 @@ background_rect.topleft = (0, 0)
 #Create a game
 my_game = Game(my_player, my_zombie_group, my_platform_group, my_portal_group, my_bullet_group, my_ruby_group)
 my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
-# pygame.mixer.music.play(-1, 0.0)
+pygame.mixer.music.play(-1, 0.0)
 
 #The main game loop
 running = True
@@ -91,12 +93,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             #Player wants to jump
             if event.key == pygame.K_SPACE:
-                # my_player.jump()
-                pass # Remove after uncommenting jump
+                my_player.jump()
             #Player wants to fire
             if event.key == pygame.K_UP:
-                # my_player.fire()
-                pass # Remove after uncommenting fire
+                my_player.fire()
 
     #Blit the background
     display_surface.blit(background_image, background_rect)

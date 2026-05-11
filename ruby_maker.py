@@ -12,7 +12,7 @@ class RubyMaker(pygame.sprite.Sprite):
 
         #Animation frames
         # TODO: assign load_frames() to self.ruby_sprites with 3 arguments
-        self.ruby_sprites = load_frames("image/ruby",RUBY_FRAMES,(64, 64))
+        self.ruby_sprites = load_frames("images/ruby",RUBY_FRAMES,(64, 64))
         #  1: "image/ruby"
         #  2: RUBY_FRAMES
         #  3: (64, 64)

@@ -24,8 +24,8 @@ def advance_frame(current, sprite_list, speed):
     Returns (new_index, wrapped_bool) — wrapped is True the frame the cycle resets."""
     if current < len(sprite_list) - 1:
         return current + speed, False
-    else:
-        return 0, True
+    return 0, True
+
 
 def teleport(sprite):
     """Move a sprite to the opposite portal exit and update its rect."""
@@ -33,11 +33,14 @@ def teleport(sprite):
         sprite.position.x = 86
     else:
         sprite.position.x = WINDOW_WIDTH - 150
+
     if sprite.position.y > WINDOW_HEIGHT // 2:
         sprite.position.y = 64
     else:
         sprite.position.y = WINDOW_HEIGHT - 132
-        sprite.rect.bottomleft = sprite.position
+
+    sprite.rect.bottomleft = sprite.position
+
 
 def handle_portal_collision(sprite):
     """If sprite hit a portal, play its sound and teleport.
@@ -46,13 +49,16 @@ def handle_portal_collision(sprite):
         sprite.portal_sound.play()
         teleport(sprite)
 
+
 def apply_motion(sprite):
     """Integrate kinematics, wrap horizontally, sync rect to position.
     Requires sprite to have .velocity, .acceleration, .position, .rect."""
-    sprite.velocity += sprite.accleration
-    sprite.position = sprite.velocity + 0.5 * sprite.acceleration
+    sprite.velocity += sprite.acceleration
+    sprite.position += sprite.velocity + 0.5 * sprite.acceleration
+
     if sprite.position.x < 0:
         sprite.position.x = WINDOW_WIDTH
     elif sprite.position.x > WINDOW_WIDTH:
         sprite.position.x = 0
-        sprite.rect.bottomleft = sprite.position
+
+    sprite.rect.bottomleft = sprite.position
